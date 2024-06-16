@@ -1,6 +1,6 @@
 package com.ms.user.controllers;
 
-import com.ms.user.dtos.UserRecordDTO;
+import com.ms.user.dtos.UserRecordDto;
 import com.ms.user.exceptions.EmailAlreadyExistsException;
 import com.ms.user.exceptions.UserNotFoundException;
 import com.ms.user.models.UserModel;
@@ -28,7 +28,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<UserModel> saveUser(@RequestBody @Valid UserRecordDTO userRecordDTO) {
+    public ResponseEntity<UserModel> saveUser(@RequestBody @Valid UserRecordDto userRecordDTO) {
         var userModel = new UserModel();
         BeanUtils.copyProperties(userRecordDTO, userModel);
         UserModel savedUser = userService.save(userModel);
@@ -49,7 +49,7 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<String> updateUser(@PathVariable UUID id, @RequestBody @Valid UserRecordDTO userRecordDTO) {
+    public ResponseEntity<String> updateUser(@PathVariable UUID id, @RequestBody @Valid UserRecordDto userRecordDTO) {
         var userModel = new UserModel();
         BeanUtils.copyProperties(userRecordDTO, userModel);
         userService.updateUser(id, userModel);

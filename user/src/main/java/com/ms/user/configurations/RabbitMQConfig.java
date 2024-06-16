@@ -1,4 +1,4 @@
-package com.ms.user;
+package com.ms.user.configurations;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;

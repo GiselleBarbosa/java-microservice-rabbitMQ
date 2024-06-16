@@ -6,7 +6,6 @@ import com.ms.user.models.UserModel;
 import com.ms.user.producers.UserProducer;
 import com.ms.user.repositories.UserRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,23 +15,28 @@ import java.util.UUID;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
-    private UserProducer userProducer;
+    final UserRepository userRepository;
+    final UserProducer userProducer;
 
-    public List<UserModel> getAllUsers() {
-        return userRepository.findAll();
+    public UserService(UserRepository userRepository, UserProducer userProducer) {
+        this.userRepository = userRepository;
+        this.userProducer = userProducer;
     }
 
     @Transactional
     public UserModel save(UserModel userModel) {
         Optional<UserModel> existingUser = userRepository.findByEmail(userModel.getEmail());
         if (existingUser.isPresent()) {
-            userProducer.publishMessageEmail(userModel);
             throw new EmailAlreadyExistsException(userModel.getEmail());
         }
 
-        return userRepository.save(userModel);
+        userModel = userRepository.save(userModel);
+        userProducer.publishMessageEmail(userModel);
+        return userModel;
+    }
+
+    public List<UserModel> getAllUsers() {
+        return userRepository.findAll();
     }
 
     public UserModel getUserById(UUID userId) {

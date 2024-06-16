@@ -1,6 +1,6 @@
 package com.ms.user.producers;
 
-import com.ms.user.dtos.EmailDTO;
+import com.ms.user.dtos.EmailDto;
 import com.ms.user.models.UserModel;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,13 +19,19 @@ public class UserProducer {
     private String routingKey;
 
     public void publishMessageEmail(UserModel userModel) {
-        var emailDto = new EmailDTO();
+        var emailDto = new EmailDto();
+
         emailDto.setUserId(userModel.getUserId());
         emailDto.setEmailTo(userModel.getEmail());
         emailDto.setSubject("Cadastro realizado com sucesso!");
-        emailDto.setText(userModel.getName() + ", seja bem vindo(a)! \nAgradecemos o seu cadastro, aproveite agora todos os recursos da nossa plataforma!");
+
+        emailDto.setText(userModel.getName()
+                + ", seja bem vindo(a)!"
+                + "\n\nAgradecemos o seu cadastro, " +
+                "aproveite agora todos os recursos da nossa plataforma!");
 
         rabbitTemplate.convertAndSend("", routingKey, emailDto);
+        System.out.println("CHAMOU O PUBLISHMESSAGEEMAIL");
     }
 
 }
