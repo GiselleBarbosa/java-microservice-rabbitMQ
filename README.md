@@ -78,11 +78,11 @@ Principais recursos do Serviço de Email incluem:
 
 A configuração para RabbitMQ e PostgreSQL pode ser encontrada no arquivo `application.properties` de cada serviço. Certifique-se de atualizar essas configurações para corresponder ao seu ambiente de configuração.
 
-# Configuração do Arquivo `application.properties`
+### Configuração do Arquivo `application.properties`
 
 O arquivo `application.properties` contém as configurações necessárias para a execução do Serviço de Email. Abaixo está uma descrição detalhada de cada configuração e orientações sobre como preenchê-las.
 
-## Nome da Aplicação e Porta do Servidor
+### Nome da Aplicação e Porta do Servidor
 > ⚠️ **Atenção!**
 > </br>
 > Tenha cuidado para não expor seus dados pessoais como *email* e *senha*. 
