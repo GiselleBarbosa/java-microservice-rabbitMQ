@@ -4,6 +4,7 @@ import com.ms.user.dtos.UserRecordDto;
 import com.ms.user.models.UserModel;
 import com.ms.user.services.UserService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
+@Slf4j
 public class UserController {
 
     @Autowired
@@ -23,6 +25,7 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<UserModel>> getAllUsers() {
         List<UserModel> users = userService.getAllUsers();
+        log.info("Encontrado(s) {} usuários", users.size());
         return ResponseEntity.ok(users);
     }
 
@@ -31,12 +34,14 @@ public class UserController {
         var userModel = new UserModel();
         BeanUtils.copyProperties(userRecordDTO, userModel);
         UserModel savedUser = userService.save(userModel);
+        log.info("Usuário com email {} foi registrado com sucesso!", savedUser.getEmail());
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserModel> getUserById(@PathVariable UUID id) {
         UserModel userModel = userService.getUserById(id);
+        log.info("Usuário com ID {} encontrado com sucesso!", id);
         return ResponseEntity.ok(userModel);
     }
 
@@ -44,6 +49,7 @@ public class UserController {
     public ResponseEntity<String> deleteUser(@PathVariable UUID id) {
         userService.deleteById(id);
         String message = "Usuário com ID " + id + " foi removido com sucesso.";
+        log.info("Usuário com ID {} deletado com sucesso!", id);
         return ResponseEntity.ok(message);
     }
 
@@ -52,7 +58,8 @@ public class UserController {
         var userModel = new UserModel();
         BeanUtils.copyProperties(userRecordDTO, userModel);
         userService.updateUser(id, userModel);
-        String message = "Usuário com ID " + id + " foi atualizado com sucesso.";
+        String message = "Usuário com ID " + id + " foi atualizado com sucesso!";
+        log.info("Usuário com ID {} atualizado com sucesso", id);
         return ResponseEntity.ok(message);
     }
 }
