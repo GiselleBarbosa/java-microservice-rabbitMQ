@@ -108,14 +108,13 @@ class UserControllerTest {
     void saveUser_EmailAlreadyExistsException() {
         UserRecordDto userRecordDto = new UserRecordDto("Test User", "existing@example.com");
 
-        // Mock para lançar EmailAlreadyExistsException
         when(userService.save(any(UserModel.class))).thenThrow(new EmailAlreadyExistsException("existing@example.com"));
 
         ResponseEntity<UserModel> response = userController.saveUser(userRecordDto);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNull(response.getBody());
-        assertTrue(response.toString().contains("Email already exists: existing@example.com"));
+        assertTrue(response.toString().contains("Email já existe: existing@example.com"));
         verify(userService, times(1)).save(any(UserModel.class));
     }
 
@@ -123,13 +122,12 @@ class UserControllerTest {
     void deleteUser_UserNotFoundException() {
         UUID userId = UUID.randomUUID();
 
-        // Mock para lançar UserNotFoundException
         doThrow(new UserNotFoundException(userId)).when(userService).deleteById(userId);
 
         ResponseEntity<String> response = userController.deleteUser(userId);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertTrue(response.getBody().contains("User not found with ID: " + userId));
+        assertTrue(response.getBody().contains("Usuário não encontrado com ID: " + userId));
         verify(userService, times(1)).deleteById(userId);
     }
 
@@ -138,13 +136,12 @@ class UserControllerTest {
         UUID userId = UUID.randomUUID();
         UserRecordDto userRecordDto = new UserRecordDto("Updated User", "updated@example.com");
 
-        // Mock para lançar UserNotFoundException
         when(userService.updateUser(eq(userId), any(UserModel.class))).thenThrow(new UserNotFoundException(userId));
 
         ResponseEntity<String> response = userController.updateUser(userId, userRecordDto);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertTrue(response.getBody().contains("User not found with ID: " + userId));
+        assertTrue(response.getBody().contains("Usuário não encontrado com ID: " + userId));
         verify(userService, times(1)).updateUser(eq(userId), any(UserModel.class));
     }
 
@@ -152,15 +149,14 @@ class UserControllerTest {
     void getUserById_UserNotFoundException() {
         UUID userId = UUID.randomUUID();
 
-        // Mock para lançar UserNotFoundException
         when(userService.getUserById(userId)).thenThrow(new UserNotFoundException(userId));
 
         ResponseEntity<UserModel> response = userController.getUserById(userId);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertNull(response.getBody()); // Verifica se o corpo da resposta está vazio
-        assertTrue(response.toString().contains("User not found with ID: " + userId)); // Verifica se a mensagem de erro está presente na resposta
+        assertNull(response.getBody());
+        assertTrue(response.toString().contains("Usuário não encontrado com ID: " + userId));
 
-        verify(userService, times(1)).getUserById(userId); // Verifica se o método foi chamado uma vez no serviço
+        verify(userService, times(1)).getUserById(userId);
     }
 }
